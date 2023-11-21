@@ -4,11 +4,14 @@ from os.path import isfile, join
 
 from docx import Document
 from docx import Document as Document_compose
+from docx.oxml.parser import OxmlElement
+from docx.oxml.shared import qn
 from docx.shared import Pt, RGBColor
 from docxcompose.composer import Composer
 
 foldername = "file"
 report_foldername = "final_report"
+file_detection_strings = {"telegram": "tg", "russian": "rm", "mega": "mega"}
 colors = {"black": "0,0,0", "red": "255,0,0", "blue": "0,0,255", "white": "255,255,255"}
 filenames = {
     "russian": "sep_rm.txt",
@@ -22,11 +25,14 @@ output_filenames = {
     "telegram": "telegram_output.docx",
     "mega": "mega_output.docx",
     "combined": f"{report_foldername}/combined.docx",
+    "initial": "initial_output.docx",
 }
 standard_data_filenames = {
     "russian": "russian.docx",
     "telegram": "telegram.docx",
     "mega": "mega.docx",
+    "combined": f"{report_foldername}/combined.docx",
+    "initial": f"{report_foldername}/init.docx",
 }
 
 
@@ -38,22 +44,17 @@ def _set_cell_background(cell, fill, color=None, val=None):
     @val: Specifies the pattern to be used to lay the pattern
     color over the background color.
     """
-    from docx.oxml.parser import OxmlElement
-    from docx.oxml.shared import qn  # feel free to move these out
-
     cell_properties = cell._element.tcPr
     try:
-        cell_shading = cell_properties.xpath("w:shd")[
-            0
-        ]  # in case there's already shading
+        cell_shading = cell_properties.xpath("w:shd")[0]
     except IndexError:
         cell_shading = OxmlElement("w:shd")  # add new w:shd element to it
     if fill:
         cell_shading.set(qn("w:fill"), fill)  # set fill property, respecting namespace
     if color:
-        pass  # TODO
+        pass
     if val:
-        pass  # TODO
+        pass
     cell_properties.append(cell_shading)
 
 
@@ -163,14 +164,17 @@ def add_key_value_in_doc(
     paragraph.add_run("\n")
 
 
-def populate_market_data(doc, content):
+def populate_market_data(doc, content, russian_exist):
     site_sections = content.split("Site:")
     site_sections = [section.strip() for section in site_sections if section.strip()]
     for site in site_sections:
         source, actor, date = get_source_actor_n_date(site, filenames["russian"])
-        p = doc.add_paragraph(f"Findings:")
-        p.runs[0].font.size = Pt(16)
-        p.runs[0].font.bold = True
+        if not russian_exist:
+            p = doc.add_paragraph(f"Findings:")
+            p.runs[0].font.size = Pt(16)
+            p.runs[0].font.bold = True
+            russian_exist = True
+
         rows, cols = 3, 2
         table = doc.add_table(rows, cols)
         source_cells, actor_cells = table.rows[0].cells, table.rows[1].cells
@@ -227,17 +231,20 @@ def populate_market_data(doc, content):
         add_key_value_in_doc(
             "\tPrice: ", price, colors["black"], colors["black"], False, True, paragraph
         )
+    return russian_exist
 
 
-def populate_telegram_data(doc, content):
+def populate_telegram_data(doc, content, telegram_exist):
     title_sections = content.split("Title: ")
     title_sections = [section.strip() for section in title_sections if section.strip()]
 
     for title in title_sections:
         source, actor, date = get_source_actor_n_date(title, filenames["telegram"])
-        p = doc.add_paragraph(f"Findings:")
-        p.runs[0].font.size = Pt(16)
-        p.runs[0].font.bold = True
+        if not telegram_exist:
+            p = doc.add_paragraph(f"Findings:")
+            p.runs[0].font.size = Pt(16)
+            p.runs[0].font.bold = True
+            telegram_exist = True
         rows, cols = 3, 2
         table = doc.add_table(rows, cols)
         source_cells, actor_cells = table.rows[0].cells, table.rows[1].cells
@@ -282,16 +289,19 @@ def populate_telegram_data(doc, content):
             color_line(f"@{domain}", False, colors["blue"], paragraph)
             color_line(f":{another_name}", False, colors["black"], paragraph)
             paragraph.add_run("\n")
+    return telegram_exist
 
 
-def populate_mega_data(doc, content):
+def populate_mega_data(doc, content, mega_exist):
     site_sections = content.split("Site:")
     site_sections = [section.strip() for section in site_sections if section.strip()]
     for site in site_sections:
         source, actor, date = get_source_actor_n_date(site, filenames["mega"])
-        p = doc.add_paragraph(f"Findings:")
-        p.runs[0].font.size = Pt(16)
-        p.runs[0].font.bold = True
+        if not mega_exist:
+            p = doc.add_paragraph(f"Findings:")
+            p.runs[0].font.size = Pt(16)
+            p.runs[0].font.bold = True
+            mega_exist = True
         rows, cols = 3, 2
         table = doc.add_table(rows, cols)
         source_cells, actor_cells = table.rows[0].cells, table.rows[1].cells
@@ -345,51 +355,66 @@ def populate_mega_data(doc, content):
             color_line(f"@{domain}", False, colors["blue"], paragraph)
             color_line(f":{another_name}", False, colors["black"], paragraph)
             paragraph.add_run("\n")
+    return mega_exist
 
 
 domains = get_file_content(f"{foldername}/{filenames['search']}")
 domains = domains.split("\n")
 
-master = Document_compose(standard_data_filenames["russian"])
+master = Document_compose(standard_data_filenames["initial"])
 composer = Composer(master)
-doc = Document()
-content = get_file_content(f"{foldername}/{filenames['russian']}")
-populate_market_data(doc, content)
-
-doc.save(output_filenames["russian"])
-doc2 = Document_compose(output_filenames["russian"])
-composer.append(doc2)
 composer.save(output_filenames["combined"])
 
-master = Document_compose(output_filenames["combined"])
-composer = Composer(master)
-doc2 = Document_compose(standard_data_filenames["telegram"])
-composer.append(doc2)
-composer.save(output_filenames["combined"])
+docx_filenames = get_file_names(foldername)
+print(docx_filenames)
+russian_exist, telegram_exist, mega_exist = False, False, False
+for filename in docx_filenames:
+    if (
+        file_detection_strings["russian"] in filename
+        and filename != filenames["search"]
+    ):
+        if not russian_exist:
+            doc2 = Document_compose(standard_data_filenames["russian"])
+            composer.append(doc2)
+            composer.save(output_filenames["combined"])
 
-master = Document_compose(output_filenames["combined"])
-composer = Composer(master)
-doc = Document()
-content = get_file_content(f"{foldername}/{filenames['telegram']}")
-populate_telegram_data(doc, content)
-doc.save(output_filenames["telegram"])
-doc2 = Document_compose(output_filenames["telegram"])
-composer.append(doc2)
-composer.save(output_filenames["combined"])
+        master = Document_compose(output_filenames["combined"])
+        composer = Composer(master)
+        doc = Document()
+        content = get_file_content(f"{foldername}/{filenames['russian']}")
+        russian_exist = populate_market_data(doc, content, russian_exist)
+        doc.save(output_filenames["telegram"])
+        doc2 = Document_compose(output_filenames["telegram"])
+        composer.append(doc2)
+        composer.save(output_filenames["combined"])
+    elif file_detection_strings["telegram"] in filename:
+        if not telegram_exist:
+            doc2 = Document_compose(standard_data_filenames["telegram"])
+            composer.append(doc2)
+            composer.save(output_filenames["combined"])
 
-master = Document_compose(output_filenames["combined"])
-composer = Composer(master)
-doc2 = Document_compose(standard_data_filenames["mega"])
-composer.append(doc2)
-composer.save(output_filenames["combined"])
+        master = Document_compose(output_filenames["combined"])
+        composer = Composer(master)
+        doc = Document()
+        content = get_file_content(f"{foldername}/{filenames['telegram']}")
+        telegram_exist = populate_telegram_data(doc, content, telegram_exist)
+        doc.save(output_filenames["telegram"])
+        doc2 = Document_compose(output_filenames["telegram"])
+        composer.append(doc2)
+        composer.save(output_filenames["combined"])
+    elif file_detection_strings["mega"] in filename:
+        if not mega_exist:
+            doc2 = Document_compose(standard_data_filenames["mega"])
+            composer.append(doc2)
+            composer.save(output_filenames["combined"])
 
-master = Document_compose(output_filenames["combined"])
-composer = Composer(master)
-doc = Document()
-content = get_file_content(f"{foldername}/{filenames['mega']}")
-populate_mega_data(doc, content)
+        master = Document_compose(output_filenames["combined"])
+        composer = Composer(master)
+        doc = Document()
+        content = get_file_content(f"{foldername}/{filenames['mega']}")
+        mega_exist = populate_mega_data(doc, content, mega_exist)
 
-doc.save(output_filenames["mega"])
-doc2 = Document_compose(output_filenames["mega"])
-composer.append(doc2)
-composer.save(output_filenames["combined"])
+        doc.save(output_filenames["mega"])
+        doc2 = Document_compose(output_filenames["mega"])
+        composer.append(doc2)
+        composer.save(output_filenames["combined"])
