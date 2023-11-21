@@ -8,6 +8,7 @@ from docx.shared import Pt, RGBColor
 from docxcompose.composer import Composer
 
 foldername = "file"
+report_foldername = "final_report"
 colors = {"black": "0,0,0", "red": "255,0,0", "blue": "0,0,255", "white": "255,255,255"}
 filenames = {
     "russian": "sep_rm.txt",
@@ -20,7 +21,7 @@ output_filenames = {
     "russian": "russian_output.docx",
     "telegram": "telegram_output.docx",
     "mega": "mega_output.docx",
-    "combined": "combined.docx",
+    "combined": f"{report_foldername}/combined.docx",
 }
 standard_data_filenames = {
     "russian": "russian.docx",
