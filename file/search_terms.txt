@@ -1,0 +1,6 @@
+sampledomain.com
+other-sample-domain.com
+@sampledomain.com
+@other-sample-domain.com
+catalog.sampledomain.com
+dir.other-sample-domain.com

@@ -1,0 +1,221 @@
+Site: market_russianmarket
+
+
+ 
+ 
+Description
+
+ 
+[Include information that's helpful to understand the case context and goals]
+ 
+ 
+Posts
+
+ 
+
+Type: product | 09/30/23 08:06 PM
+_____________________________________________________________________________________________________
+
+
+Stealer:
+lumma
+
+Country:
+United Kingdom
+England
+ISP: BT Public Internet Service
+
+Links:
+sampledomain.com
+Login: + 
+  Password: + 
+  Cookie: -
+web.sampledomain.com
+Login: + 
+  Password: + 
+  Cookie: -
+192.168.1.254
+Login: + 
+  Password: + 
+  Cookie: -
+access.service.gov.uk
+Login: + 
+  Password: + 
+  Cookie: -
+folder.other-sample-domain.com
+Login: + 
+  Password: + 
+  Cookie: -
+sampledomain.com
+Login: + 
+  Password: + 
+  Cookie: -
+greenmangaming.com
+Login: + 
+  Password: + 
+  Cookie: -
+dir.other-sample-domain.com
+Login: + 
+  Password: + 
+  Cookie: -
+royalmail.com
+Login: + 
+  Password: + 
+  Cookie: -
+tassimo.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+myheritage.com
+Login: + 
+  Password: + 
+  Cookie: -
+app.petrolprices.com
+Login: + 
+  Password: + 
+  Cookie: -
+discord.com
+Login: + 
+  Password: + 
+  Cookie: -
+plus.net
+Login: + 
+  Password: + 
+  Cookie: -
+mcdfootwear.com
+Login: + 
+  Password: + 
+  Cookie: -
+my.theatreroyal.com
+Login: + 
+  Password: + 
+  Cookie: -
+accounts.google.com
+Login: + 
+  Password: + 
+  Cookie: +
+wayfair.co.uk
+
+Outlook:
+-
+
+Info:
+-
+
+Stolen Date / Size:
+2023.09.27 0.36Mb
+
+Vendor:
+Mo####yf [Diamond]
+
+Price:
+$ 10.00
+
+
+
+
+Actor: Mo####yf [Diamond]
+Reputation: 1.0/10
+
+Site: market_russianmarket
+
+
+ 
+ 
+Description
+
+ 
+[Include information that's helpful to understand the case context and goals]
+ 
+ 
+Posts
+
+ 
+
+Type: product | 09/26/23 05:06 PM
+_____________________________________________________________________________________________________
+
+
+Stealer:
+Vidar
+
+Country:
+United Kingdom
+England
+ISP: BT Public Internet Service
+
+Links:
+account.thetimes.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+sampledomain.com
+Login: + 
+  Password: + 
+  Cookie: -
+online.mbna.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+amazon.co.uk
+Login: + 
+  Password: + 
+  Cookie: +
+access.service.gov.uk
+Login: + 
+  Password: + 
+  Cookie: -
+account.coop.co.uk [https://account.coop.co.uk/] 
+Login: + 
+  Password: + 
+  Cookie: -
+gnr.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+accounts.spotify.com
+Login: + 
+  Password: + 
+  Cookie: -
+ellisons.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+localhost
+Login: + 
+  Password: + 
+  Cookie: -
+catalog.sampledomain.com
+Login: + 
+  Password: + 
+  Cookie: -
+twitter.com
+Login: + 
+  Password: + 
+  Cookie: +
+wayfair.co.uk
+Login: + 
+  Password: + 
+  Cookie: -
+family.michaeljones.me.uk
+
+Outlook:
+-
+
+Info:
+-
+
+Stolen Date / Size:
+2023.09.14 0.36Mb
+
+Vendor:
+Mo####yf [Diamond]
+
+Price:
+$ 10.00
+
+
+
+
+Actor: Mo####yf [Diamond]
+Reputation: 1.0/10
